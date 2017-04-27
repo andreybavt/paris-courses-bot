@@ -18,10 +18,10 @@ function getUpcomingSessions(data) {
 }
 function sessionToString(session) {
     let day = session.realStartDate.getDay();
-    let month = session.realStartDate.getMonth();
+    let month = session.realStartDate.getUTCMonth() + 1;
     let year = session.realStartDate.getFullYear();
     let html = `<a href="https://cma.paris.fr/#displayElement(${session.ElementId})">${session.Title}</a>`;
-    let response = `${day}/${month}/${year} (${human(session.realStartDate)})
+    let response = `${day}.${month}.${year} (${human(session.realStartDate)})
 ${html}`;
     return response;
 }
