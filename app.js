@@ -45,7 +45,7 @@ function fetchRegular() {
         if (Array.from(newElements).length) {
             CHATS.forEach((e) => {
                 bot.sendMessage(e, 'NEW COURSES!');
-                bot.sendMessage(e, newElements.map(sessionToString).join('\n\n'), {parse_mode: 'HTML'});
+                bot.sendMessage(e, elementsToMessage(newElements), {parse_mode: 'HTML'});
             });
         }
 
@@ -89,13 +89,16 @@ let getCourses = function (action, chatId) {
         console.error(e);
     });
 };
+let elementsToMessage = function (messages) {
+    return messages.sort((one, other) => one.realStartDate - other.realStartDate).map(sessionToString).join('\n\n');
+};
 bot.on('message', (msg) => {
     const chatId = msg.chat.id;
     addNewChat(chatId);
 
     bot.sendMessage(chatId, 'Serving upcoming courses...');
     getCourses(function (data) {
-        let response = getUpcomingSessions(data).sort((one, other) => one.realStartDate - other.realStartDate).map(sessionToString).join('\n\n');
+        let response = elementsToMessage(getUpcomingSessions(data));
         bot.sendMessage(chatId, response, {parse_mode: 'HTML'});
     }, chatId);
 
